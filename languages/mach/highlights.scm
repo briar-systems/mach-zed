@@ -195,6 +195,10 @@
 (assignment_expression
   "=" @operator)
 
+; pointer-type sigil ( *T ) and bitwise-and / readonly-pointer sigil
+"*" @operator
+"&" @operator
+
 ; =============================================================================
 ; Punctuation
 ; =============================================================================

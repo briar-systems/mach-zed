@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Syntax highlighting** via [tree-sitter-mach](https://github.com/octalide/tree-sitter-mach)
+- **Syntax highlighting** via [mach-tree-sitter](https://github.com/octalide/mach-tree-sitter)
 - **Auto-indentation** for blocks, records, unions, parameter lists, and initializer lists
 - **Bracket matching** and auto-closing for `{}`, `[]`, `()`, `""`, `''`
 - **Comment toggling** with `#`
@@ -134,10 +134,29 @@ If none of these succeed, Zed shows an error message guiding the user to install
 
 ## Contributing
 
-1. Clone this repo alongside [tree-sitter-mach](https://github.com/octalide/tree-sitter-mach).
+1. Clone this repo alongside [mach-tree-sitter](https://github.com/octalide/mach-tree-sitter).
 2. Edit queries in `languages/mach/` and reload the Zed extension to test.
-3. For grammar changes, update `tree-sitter-mach` and bump the commit hash in `extension.toml`.
+3. For grammar changes, update `mach-tree-sitter` and bump the `rev` in `[grammars.mach]` of `extension.toml`.
 4. For LSP integration changes, edit `src/lib.rs` and rebuild the WASM component.
+
+> **Highlight queries are coupled to the grammar.** A query may only reference
+> node types and tokens that the pinned `mach-tree-sitter` revision actually
+> produces — referencing a node or token the grammar does not emit makes Zed
+> drop the entire query file. So query updates for new syntax must land
+> *together with* a grammar bump, never ahead of one.
+>
+> Syntax that depends on a future `mach-tree-sitter` revision (tracked in
+> [mach-tree-sitter#1](https://github.com/octalide/mach-tree-sitter/issues/1))
+> and the query additions to make once that grammar lands:
+>
+> - `:~` bit-reinterpret cast — add `(cast_expression ":~" @operator)` once the
+>   grammar's `cast_expression` accepts `:~` alongside `::`.
+> - `fwd` re-export declaration — add `"fwd" @keyword.import` and an
+>   `fwd_declaration` outline/highlight rule once the grammar has the node.
+> - `$`-prefixed comptime value parameters (`fun f($x: T)`) — extend the
+>   `(parameter ...)` rules once the grammar marks the `$`.
+> - The `asm <ISA> { ... }` ISA-tag form — realign the `asm_statement` /
+>   `asm_isa_block` queries once the grammar matches `doc/language/grammar.md`.
 
 ## License
 
