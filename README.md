@@ -162,7 +162,8 @@ If none of these succeed, Zed shows an error message guiding the user to install
 >
 > Note `pub` / `ext` are repeatable `modifiers` children of each declaration
 > (there is no `public_declaration` or `extern_declaration` node), and there is
-> no `&T` readonly-pointer or method-receiver syntax.
+> no method-receiver syntax. `&` is the bitwise-AND operator, so it highlights as
+> an operator rather than a pointer sigil.
 
 ## License
 
