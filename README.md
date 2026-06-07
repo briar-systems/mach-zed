@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Syntax highlighting** via [tree-sitter-mach](https://github.com/octalide/tree-sitter-mach)
+- **Syntax highlighting** via [mach-tree-sitter](https://github.com/octalide/mach-tree-sitter)
 - **Auto-indentation** for blocks, records, unions, parameter lists, and initializer lists
 - **Bracket matching** and auto-closing for `{}`, `[]`, `()`, `""`, `''`
 - **Comment toggling** with `#`
@@ -134,10 +134,35 @@ If none of these succeed, Zed shows an error message guiding the user to install
 
 ## Contributing
 
-1. Clone this repo alongside [tree-sitter-mach](https://github.com/octalide/tree-sitter-mach).
+1. Clone this repo alongside [mach-tree-sitter](https://github.com/octalide/mach-tree-sitter).
 2. Edit queries in `languages/mach/` and reload the Zed extension to test.
-3. For grammar changes, update `tree-sitter-mach` and bump the commit hash in `extension.toml`.
+3. For grammar changes, update `mach-tree-sitter` and bump the `rev` in `[grammars.mach]` of `extension.toml`.
 4. For LSP integration changes, edit `src/lib.rs` and rebuild the WASM component.
+
+> **Highlight queries are coupled to the grammar.** A query may only reference
+> node types and tokens that the pinned `mach-tree-sitter` revision actually
+> produces — referencing a node or token the grammar does not emit makes Zed
+> drop the entire query file. So query updates for new syntax must land
+> *together with* a grammar bump, never ahead of one. Validate every query file
+> against the pinned grammar before committing (`tree-sitter query <file>.scm
+> sample.mach` must exit cleanly for each).
+>
+> The grammar now matches the authoritative `doc/language/grammar.md`, and the
+> queries cover the full surface, including:
+>
+> - `:~` bit-reinterpret and `::` value casts — `(cast_expression operator: _
+>   @operator)`.
+> - `fwd` re-export declarations — `"fwd" @keyword`, plus a
+>   `forward_declaration` outline item and alias highlight.
+> - `$`-prefixed comptime value parameters / fields (`fun f($x: T)`, `$tag: T;`)
+>   — `(parameter comptime: "$" ...)` and `(field_declaration comptime: "$"
+>   ...)`.
+> - The `asm <isa> { ... }` ISA-tag form — `(asm_statement isa: (identifier))`
+>   and `(asm_statement body: (asm_body))`; the raw body is one `asm_body` node.
+>
+> Note `pub` / `ext` are repeatable `modifiers` children of each declaration
+> (there is no `public_declaration` or `extern_declaration` node), and there is
+> no `&T` readonly-pointer or method-receiver syntax.
 
 ## License
 
