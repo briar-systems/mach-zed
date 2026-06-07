@@ -12,8 +12,9 @@
 ; Keywords
 ; =============================================================================
 
-; Import
+; Import / re-export
 "use" @keyword
+"fwd" @keyword
 
 ; Visibility / linkage
 "pub" @keyword
@@ -88,11 +89,12 @@
 (function_declaration
   name: (identifier) @function)
 
-(method_receiver
-  receiver_name: (identifier) @variable)
-
 (parameter
   name: (identifier) @variable)
+
+; comptime value parameter marker ( fun f($x: T) )
+(parameter
+  comptime: "$" @punctuation.special)
 
 (call_expression
   function: (identifier) @function)
@@ -107,6 +109,10 @@
 
 (field_declaration
   name: (identifier) @property)
+
+; comptime field marker
+(field_declaration
+  comptime: "$" @punctuation.special)
 
 (field_expression
   field: (identifier) @property)
@@ -127,18 +133,11 @@
 (use_declaration
   alias: (identifier) @variable)
 
+(forward_declaration
+  alias: (identifier) @variable)
+
 (module_path
   (identifier) @variable)
-
-; =============================================================================
-; Extern declarations
-; =============================================================================
-
-(extern_declaration
-  abi: (string_literal) @string.special)
-
-(extern_declaration
-  name: (identifier) @function)
 
 ; =============================================================================
 ; Test declarations
@@ -151,11 +150,23 @@
 ; Compile-time
 ; =============================================================================
 
+; declaration-scope $if / $or chain
+(comptime_if_declaration
+  "$" @keyword
+  "if" @keyword)
+
+(comptime_or_declaration_clause
+  "$" @keyword
+  "or" @keyword)
+
+; statement-scope $if / $or chain
 (comptime_if_statement
-  "$if" @keyword)
+  "$" @keyword
+  "if" @keyword)
 
 (comptime_or_clause
-  "$or" @keyword)
+  "$" @keyword
+  "or" @keyword)
 
 (comptime_expression
   "$" @keyword)
@@ -170,14 +181,12 @@
 ; Assembly
 ; =============================================================================
 
-(asm_isa_block
+; asm <isa> { raw body }
+(asm_statement
   isa: (identifier) @label)
 
 (asm_statement
-  (string_literal) @string.special)
-
-(asm_isa_block
-  (string_literal) @string.special)
+  body: (asm_body) @string.special)
 
 ; =============================================================================
 ; Operators
@@ -189,13 +198,14 @@
 (unary_expression
   operator: _ @operator)
 
+; value cast ( :: ) and bit-reinterpret cast ( :~ )
 (cast_expression
-  "::" @operator)
+  operator: _ @operator)
 
 (assignment_expression
   "=" @operator)
 
-; pointer-type sigil ( *T ) and bitwise-and / readonly-pointer sigil
+; pointer-type sigil ( *T, **T ) and bitwise-and sigil
 "*" @operator
 "&" @operator
 

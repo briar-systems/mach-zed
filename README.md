@@ -143,20 +143,26 @@ If none of these succeed, Zed shows an error message guiding the user to install
 > node types and tokens that the pinned `mach-tree-sitter` revision actually
 > produces — referencing a node or token the grammar does not emit makes Zed
 > drop the entire query file. So query updates for new syntax must land
-> *together with* a grammar bump, never ahead of one.
+> *together with* a grammar bump, never ahead of one. Validate every query file
+> against the pinned grammar before committing (`tree-sitter query <file>.scm
+> sample.mach` must exit cleanly for each).
 >
-> Syntax that depends on a future `mach-tree-sitter` revision (tracked in
-> [mach-tree-sitter#1](https://github.com/octalide/mach-tree-sitter/issues/1))
-> and the query additions to make once that grammar lands:
+> The grammar now matches the authoritative `doc/language/grammar.md`, and the
+> queries cover the full surface, including:
 >
-> - `:~` bit-reinterpret cast — add `(cast_expression ":~" @operator)` once the
->   grammar's `cast_expression` accepts `:~` alongside `::`.
-> - `fwd` re-export declaration — add `"fwd" @keyword.import` and an
->   `fwd_declaration` outline/highlight rule once the grammar has the node.
-> - `$`-prefixed comptime value parameters (`fun f($x: T)`) — extend the
->   `(parameter ...)` rules once the grammar marks the `$`.
-> - The `asm <ISA> { ... }` ISA-tag form — realign the `asm_statement` /
->   `asm_isa_block` queries once the grammar matches `doc/language/grammar.md`.
+> - `:~` bit-reinterpret and `::` value casts — `(cast_expression operator: _
+>   @operator)`.
+> - `fwd` re-export declarations — `"fwd" @keyword`, plus a
+>   `forward_declaration` outline item and alias highlight.
+> - `$`-prefixed comptime value parameters / fields (`fun f($x: T)`, `$tag: T;`)
+>   — `(parameter comptime: "$" ...)` and `(field_declaration comptime: "$"
+>   ...)`.
+> - The `asm <isa> { ... }` ISA-tag form — `(asm_statement isa: (identifier))`
+>   and `(asm_statement body: (asm_body))`; the raw body is one `asm_body` node.
+>
+> Note `pub` / `ext` are repeatable `modifiers` children of each declaration
+> (there is no `public_declaration` or `extern_declaration` node), and there is
+> no `&T` readonly-pointer or method-receiver syntax.
 
 ## License
 
