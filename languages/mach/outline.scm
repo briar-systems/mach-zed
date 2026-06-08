@@ -30,35 +30,6 @@
 (test_declaration
   name: (string_literal) @name) @item
 
-; Extern declarations
-(extern_declaration
-  name: (identifier) @name) @item
-
-; Public declarations (annotate with pub context)
-(public_declaration
-  (function_declaration
-    name: (identifier) @name) @item)
-
-(public_declaration
-  (record_declaration
-    name: (identifier) @name) @item)
-
-(public_declaration
-  (union_declaration
-    name: (identifier) @name) @item)
-
-(public_declaration
-  (type_alias_declaration
-    name: (identifier) @name) @item)
-
-(public_declaration
-  (value_declaration
-    name: (identifier) @name) @item)
-
-(public_declaration
-  (variable_declaration
-    name: (identifier) @name) @item)
-
-(public_declaration
-  (extern_declaration
-    name: (identifier) @name) @item)
+; Forward re-exports
+(forward_declaration
+  path: (module_path) @name) @item
