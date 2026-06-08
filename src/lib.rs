@@ -22,9 +22,9 @@ impl zed::Extension for MachExtension {
         //    Users can set this in their settings.json:
         //    {
         //        "lsp": {
-        //            "mach-lsp": {
+        //            "mls": {
         //                "binary": {
-        //                    "path": "/path/to/mach-lsp",
+        //                    "path": "/path/to/mls",
         //                    "arguments": []
         //                }
         //            }
@@ -57,8 +57,8 @@ impl zed::Extension for MachExtension {
             self.cached_binary_path = None;
         }
 
-        // 3. Look for `mach-lsp` on the system PATH.
-        if let Some(path) = worktree.which("mach-lsp") {
+        // 3. Look for `mls` on the system PATH.
+        if let Some(path) = worktree.which("mls") {
             self.cached_binary_path = Some(path.clone());
             return Ok(Command {
                 command: path,
@@ -67,8 +67,8 @@ impl zed::Extension for MachExtension {
             });
         }
 
-        Err("mach-lsp not found. Install it and add it to your $PATH, \
-             or set the binary path in Zed settings under lsp.mach-lsp.binary.path"
+        Err("mls not found. Install it and add it to your $PATH, \
+             or set the binary path in Zed settings under lsp.mls.binary.path"
             .into())
     }
 }

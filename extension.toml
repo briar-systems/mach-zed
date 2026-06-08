@@ -10,6 +10,6 @@ repository = "https://github.com/octalide/mach-zed"
 repository = "https://github.com/octalide/mach-tree-sitter"
 rev = "705778ba97b70243b7067046ae4f9efdeb35302e"
 
-[language_servers.mach-lsp]
+[language_servers.mls]
 name = "Mach Language Server"
 languages = ["Mach"]
