@@ -1,6 +1,6 @@
 id = "mach"
 name = "Mach"
-version = "0.2.0"
+version = "0.2.1"
 schema_version = 1
 authors = ["octalide"]
 description = "Mach language support for Zed — syntax highlighting, indentation, and LSP integration."
