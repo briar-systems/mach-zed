@@ -29,10 +29,10 @@ Restart Zed to pick up the extension.
 
 ## Language Server
 
-This extension ships a Rust WASM extension that tells Zed how to locate and start `mach-lsp`. When you open a `.mach` file, Zed will:
+This extension ships a Rust WASM extension that tells Zed how to locate and start `mls`. When you open a `.mach` file, Zed will:
 
 1. Check your Zed settings for a user-configured binary path (see [Configuration](#configuration) below).
-2. Look for `mach-lsp` on your system `$PATH`.
+2. Look for `mls` on your system `$PATH`.
 3. If neither is found, display an error with instructions.
 
 ### Building mach-lsp
@@ -45,10 +45,10 @@ cd mach-lsp
 cmach build .
 ```
 
-The binary will be at `out/linux/bin/mach-lsp`. Add it to your `$PATH`:
+The binary will be at `out/{target}/{profile}/bin/mls` (e.g. `out/linux/debug/bin/mls` for a default debug build on Linux). Add it to your `$PATH`:
 
 ```bash
-cp out/linux/bin/mach-lsp ~/.local/bin/
+cp out/linux/debug/bin/mls ~/.local/bin/
 ```
 
 ### Building the WASM Extension
@@ -87,14 +87,14 @@ You can customize Mach-specific editor settings in your Zed `settings.json`:
 
 ### Language Server Binary
 
-If `mach-lsp` is not on your `$PATH`, or you want to use a specific build, configure the binary path in your Zed `settings.json`:
+If `mls` is not on your `$PATH`, or you want to use a specific build, configure the binary path in your Zed `settings.json`:
 
 ```json
 {
     "lsp": {
-        "mach-lsp": {
+        "mls": {
             "binary": {
-                "path": "/absolute/path/to/mach-lsp",
+                "path": "/absolute/path/to/mls",
                 "arguments": []
             }
         }
@@ -124,13 +124,13 @@ mach-zed/
 
 Zed extensions with language server support require a Rust WASM component that implements the `Extension` trait from `zed_extension_api`. The key method is `language_server_command`, which returns the command Zed should execute to start the LSP.
 
-The extension resolves the `mach-lsp` binary in this order:
+The extension resolves the `mls` binary in this order:
 
-1. **User settings** — `lsp.mach-lsp.binary.path` in Zed's `settings.json`
+1. **User settings** — `lsp.mls.binary.path` in Zed's `settings.json`
 2. **Cached path** — a previously resolved path that still exists on disk
-3. **System PATH** — `worktree.which("mach-lsp")` searches `$PATH`
+3. **System PATH** — `worktree.which("mls")` searches `$PATH`
 
-If none of these succeed, Zed shows an error message guiding the user to install `mach-lsp`.
+If none of these succeed, Zed shows an error message guiding the user to install `mls`.
 
 ## Contributing
 
