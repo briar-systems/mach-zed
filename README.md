@@ -42,7 +42,8 @@ Build `mach-lsp` from source:
 ```bash
 git clone https://github.com/octalide/mach-lsp.git
 cd mach-lsp
-cmach build .
+mach dep pull
+mach build .
 ```
 
 The binary will be at `out/{target}/{profile}/bin/mls` (e.g. `out/linux/debug/bin/mls` for a default debug build on Linux). Add it to your `$PATH`:
