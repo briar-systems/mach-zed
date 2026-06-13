@@ -168,4 +168,4 @@ If none of these succeed, Zed shows an error message guiding the user to install
 
 ## License
 
-[MIT](../mach/LICENSE)
+[MIT](./LICENSE)
