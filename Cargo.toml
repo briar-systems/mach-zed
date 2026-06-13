@@ -1,6 +1,6 @@
 [package]
 name = "mach-zed"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 publish = false
 
@@ -8,4 +8,4 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-zed_extension_api = "0.6.0"
+zed_extension_api = "0.7.0"
