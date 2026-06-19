@@ -1,8 +1,4 @@
-; =============================================================================
-; Mach Indent Queries for Zed
-; =============================================================================
-
-; Indent inside blocks and braced constructs
+; indent inside blocks and braced constructs
 [
   (block)
   (declaration_block)
@@ -12,7 +8,7 @@
   (argument_list)
 ] @indent
 
-; Dedent on closing brackets
+; dedent on closing brackets
 [
   "}"
   ")"
