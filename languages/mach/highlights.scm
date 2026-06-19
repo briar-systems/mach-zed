@@ -64,6 +64,11 @@
 (generic_type
   name: (type_identifier) @type)
 
+; backtick decorators — `symbol("...")`, `inline`, `align(expr)`, `section`, `library`
+(decorator
+  "`" @attribute
+  name: (identifier) @attribute)
+
 ; functions
 (function_declaration
   name: (identifier) @function)
@@ -74,6 +79,17 @@
 ; comptime value parameter marker ( fun f($x: T) )
 (parameter
   comptime: "$" @punctuation.special)
+
+; comptime variadic pack parameter ( fun f(va: ...) )
+(pack_parameter
+  name: (identifier) @variable)
+
+(pack_parameter
+  "..." @punctuation.special)
+
+; pack spread ( g(va...) )
+(pack_spread_expression
+  "..." @punctuation.special)
 
 (call_expression
   function: (identifier) @function)
@@ -133,6 +149,15 @@
 (comptime_or_clause
   "$" @keyword
   "or" @keyword)
+
+; compile-time — $each unroll over a pack or $fields(T)
+(comptime_each_statement
+  "$" @keyword
+  "each" @keyword
+  "in" @keyword)
+
+(comptime_each_statement
+  iterator: (identifier) @variable)
 
 (comptime_expression
   "$" @keyword)
