@@ -1,35 +1,31 @@
-; =============================================================================
-; Mach Code Outline Queries for Zed
-; =============================================================================
-
-; Functions
+; functions
 (function_declaration
   name: (identifier) @name) @item
 
-; Records
+; records
 (record_declaration
   name: (identifier) @name) @item
 
-; Unions
+; unions
 (union_declaration
   name: (identifier) @name) @item
 
-; Type aliases
+; type aliases
 (type_alias_declaration
   name: (identifier) @name) @item
 
-; Value declarations
+; value declarations
 (value_declaration
   name: (identifier) @name) @item
 
-; Variable declarations
+; variable declarations
 (variable_declaration
   name: (identifier) @name) @item
 
-; Test declarations
+; test declarations
 (test_declaration
   name: (string_literal) @name) @item
 
-; Forward re-exports
+; forward re-exports
 (forward_declaration
   path: (module_path) @name) @item
