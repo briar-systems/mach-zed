@@ -1,39 +1,28 @@
-; =============================================================================
-; Mach Highlight Queries for Zed
-; =============================================================================
-
-; =============================================================================
-; Comments
-; =============================================================================
-
+; comments
 (comment) @comment
 
-; =============================================================================
-; Keywords
-; =============================================================================
-
-; Import / re-export
+; keywords — import / re-export
 "use" @keyword
 "fwd" @keyword
 
-; Visibility / linkage
+; keywords — visibility / linkage
 "pub" @keyword
 "ext" @keyword
 
-; Type definition keywords
+; keywords — type definitions
 "def" @keyword
 "rec" @keyword
 "uni" @keyword
 
-; Storage keywords
+; keywords — storage
 "val" @keyword
 "var" @keyword
 
-; Function keywords
+; keywords — functions
 "fun" @keyword
 "test" @keyword
 
-; Control flow
+; keywords — control flow
 "if" @keyword
 "or" @keyword
 "for" @keyword
@@ -42,24 +31,17 @@
 "cnt" @keyword
 "fin" @keyword
 
-; Assembly
+; keywords — assembly
 "asm" @keyword
 
-; =============================================================================
-; Literals
-; =============================================================================
-
+; literals
 (integer_literal) @number
 (float_literal) @number
 (char_literal) @string
 (string_literal) @string
 (nil_literal) @constant
-(varargs_expression) @punctuation.special
 
-; =============================================================================
-; Types
-; =============================================================================
-
+; types
 (primitive_type) @type
 
 (type_identifier) @type
@@ -82,10 +64,12 @@
 (generic_type
   name: (type_identifier) @type)
 
-; =============================================================================
-; Functions
-; =============================================================================
+; backtick decorators — `symbol("...")`, `inline`, `align(expr)`, `section`, `library`
+(decorator
+  "`" @attribute
+  name: (identifier) @attribute)
 
+; functions
 (function_declaration
   name: (identifier) @function)
 
@@ -96,6 +80,17 @@
 (parameter
   comptime: "$" @punctuation.special)
 
+; comptime variadic pack parameter ( fun f(va: ...) )
+(pack_parameter
+  name: (identifier) @variable)
+
+(pack_parameter
+  "..." @punctuation.special)
+
+; pack spread ( g(va...) )
+(pack_spread_expression
+  "..." @punctuation.special)
+
 (call_expression
   function: (identifier) @function)
 
@@ -103,10 +98,7 @@
   function: (field_expression
     field: (identifier) @function.method))
 
-; =============================================================================
-; Fields and variables
-; =============================================================================
-
+; fields and variables
 (field_declaration
   name: (identifier) @property)
 
@@ -126,10 +118,7 @@
 (variable_declaration
   name: (identifier) @variable)
 
-; =============================================================================
-; Modules
-; =============================================================================
-
+; modules
 (use_declaration
   alias: (identifier) @variable)
 
@@ -139,18 +128,11 @@
 (module_path
   (identifier) @variable)
 
-; =============================================================================
-; Test declarations
-; =============================================================================
-
+; test declarations
 (test_declaration
   name: (string_literal) @string.special)
 
-; =============================================================================
-; Compile-time
-; =============================================================================
-
-; declaration-scope $if / $or chain
+; compile-time — declaration-scope $if / $or chain
 (comptime_if_declaration
   "$" @keyword
   "if" @keyword)
@@ -159,7 +141,7 @@
   "$" @keyword
   "or" @keyword)
 
-; statement-scope $if / $or chain
+; compile-time — statement-scope $if / $or chain
 (comptime_if_statement
   "$" @keyword
   "if" @keyword)
@@ -167,6 +149,15 @@
 (comptime_or_clause
   "$" @keyword
   "or" @keyword)
+
+; compile-time — $each unroll over a pack or $fields(T)
+(comptime_each_statement
+  "$" @keyword
+  "each" @keyword
+  "in" @keyword)
+
+(comptime_each_statement
+  iterator: (identifier) @variable)
 
 (comptime_expression
   "$" @keyword)
@@ -177,21 +168,14 @@
 (comptime_field_path
   (identifier) @variable.special)
 
-; =============================================================================
-; Assembly
-; =============================================================================
-
-; asm <isa> { raw body }
+; asm — asm <isa> { raw body }
 (asm_statement
   isa: (identifier) @label)
 
 (asm_statement
   body: (asm_body) @string.special)
 
-; =============================================================================
-; Operators
-; =============================================================================
-
+; operators
 (binary_expression
   operator: _ @operator)
 
@@ -209,10 +193,7 @@
 "*" @operator
 "&" @operator
 
-; =============================================================================
-; Punctuation
-; =============================================================================
-
+; punctuation
 "(" @punctuation.bracket
 ")" @punctuation.bracket
 "{" @punctuation.bracket
