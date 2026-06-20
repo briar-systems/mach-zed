@@ -64,9 +64,9 @@
 (generic_type
   name: (type_identifier) @type)
 
-; backtick decorators — `symbol("...")`, `inline`, `align(expr)`, `section`, `library`
+; #[attr] decorators — #[symbol("...")], #[inline], #[align(expr)], #[section], #[library]
 (decorator
-  "`" @attribute
+  "#[" @attribute
   name: (identifier) @attribute)
 
 ; functions
