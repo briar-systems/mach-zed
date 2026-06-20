@@ -1,6 +1,6 @@
 id = "mach"
 name = "Mach"
-version = "0.3.0"
+version = "0.4.0"
 schema_version = 1
 authors = ["octalide"]
 description = "Mach language support for Zed — syntax highlighting, indentation, and LSP integration."
@@ -8,7 +8,7 @@ repository = "https://github.com/octalide/mach-zed"
 
 [grammars.mach]
 repository = "https://github.com/octalide/mach-tree-sitter"
-rev = "9adbd90aa66b3c686f1576774959c2f0c24dcd62"
+rev = "d71d45440108c8c6b6e45a4bda0e997fae24dd06"
 
 [language_servers.mls]
 name = "Mach Language Server"

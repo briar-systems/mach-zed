@@ -160,8 +160,8 @@ If none of these succeed, Zed shows an error message guiding the user to install
 >   ...)`.
 > - The `asm <isa> { ... }` ISA-tag form — `(asm_statement isa: (identifier))`
 >   and `(asm_statement body: (asm_body))`; the raw body is one `asm_body` node.
-> - Backtick decorators (`` `symbol("...")` ``, `` `inline` ``, `` `align(expr)` ``,
->   `` `section(...)` ``, `` `library(...)` ``) — `(decorator "`" name: (identifier)
+> - `#[attr]` decorators (`#[symbol("...")]`, `#[inline]`, `#[align(expr)]`,
+>   `#[section(...)]`, `#[library(...)]`) — `(decorator "#[" name: (identifier)
 >   @attribute)`; argument expressions keep their own highlights.
 > - Comptime variadic packs — `(pack_parameter name: (identifier))` for `va: ...`,
 >   the `$each a in va { ... }` unroll (`comptime_each_statement`, `$`/`each`/`in`
