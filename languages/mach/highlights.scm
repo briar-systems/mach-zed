@@ -66,7 +66,7 @@
 
 ; #[attr] decorators — #[symbol("...")], #[inline], #[align(expr)], #[section], #[library]
 (decorator
-  "#[" @attribute
+  "#[" @punctuation.special
   name: (identifier) @attribute)
 
 ; functions
@@ -90,6 +90,12 @@
 ; pack spread ( g(va...) )
 (pack_spread_expression
   "..." @punctuation.special)
+
+; comptime field projection ( v.[f] )
+(projection_expression
+  "." @punctuation.delimiter
+  "[" @punctuation.bracket
+  "]" @punctuation.bracket)
 
 (call_expression
   function: (identifier) @function)
