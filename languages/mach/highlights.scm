@@ -97,13 +97,6 @@
   "[" @punctuation.bracket
   "]" @punctuation.bracket)
 
-(call_expression
-  function: (identifier) @function)
-
-(call_expression
-  function: (field_expression
-    field: (identifier) @function.method))
-
 ; fields and variables
 (field_declaration
   name: (identifier) @property)
@@ -117,6 +110,14 @@
 
 (initializer_field
   name: (identifier) @property)
+
+; calls — after field/property rules so method-call targets win over the broad field_expression @property rule (last-match-wins)
+(call_expression
+  function: (identifier) @function)
+
+(call_expression
+  function: (field_expression
+    field: (identifier) @function.method))
 
 (value_declaration
   name: (identifier) @variable)
