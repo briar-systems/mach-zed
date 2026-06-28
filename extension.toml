@@ -4,7 +4,7 @@ version = "0.4.2"
 schema_version = 1
 authors = ["octalide"]
 description = "Mach language support for Zed — syntax highlighting, indentation, and LSP integration."
-repository = "https://github.com/octalide/mach-zed"
+repository = "https://github.com/briar-systems/mach-zed"
 
 [grammars.mach]
 repository = "https://github.com/octalide/mach-tree-sitter"
