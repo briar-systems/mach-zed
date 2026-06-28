@@ -1,6 +1,6 @@
 # mach-zed
 
-[Zed](https://zed.dev) extension for the [Mach](https://github.com/octalide/mach) programming language.
+[Zed](https://zed.dev) extension for the [Mach](https://github.com/briar-systems/mach) programming language.
 
 ## Features
 
@@ -8,7 +8,7 @@
 - **Auto-indentation** for blocks, records, unions, parameter lists, and initializer lists
 - **Bracket matching** and auto-closing for `{}`, `[]`, `()`, `""`, `''`
 - **Comment toggling** with `#`
-- **LSP integration** with [mach-lsp](https://github.com/octalide/mach-lsp) (when available on `$PATH`)
+- **LSP integration** with [mach-lsp](https://github.com/briar-systems/mach-lsp) (when available on `$PATH`)
 
 ## Installation
 
@@ -21,7 +21,7 @@ Once published, search for **Mach** in Zed's extension panel (`zed: extensions`)
 Clone this repository and symlink or copy it into your Zed extensions directory:
 
 ```bash
-git clone https://github.com/octalide/mach-zed.git
+git clone https://github.com/briar-systems/mach-zed.git
 ln -s "$(pwd)/mach-zed" ~/.local/share/zed/extensions/installed/mach
 ```
 
@@ -40,7 +40,7 @@ This extension ships a Rust WASM extension that tells Zed how to locate and star
 Build `mach-lsp` from source:
 
 ```bash
-git clone https://github.com/octalide/mach-lsp.git
+git clone https://github.com/briar-systems/mach-lsp.git
 cd mach-lsp
 mach dep pull
 mach build .
