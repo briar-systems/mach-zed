@@ -7,7 +7,7 @@ description = "Mach language support for Zed — syntax highlighting, indentatio
 repository = "https://github.com/briar-systems/mach-zed"
 
 [grammars.mach]
-repository = "https://github.com/octalide/mach-tree-sitter"
+repository = "https://github.com/briar-systems/mach-tree-sitter"
 rev = "d71d45440108c8c6b6e45a4bda0e997fae24dd06"
 
 [language_servers.mls]
