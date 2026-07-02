@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Syntax highlighting** via [mach-tree-sitter](https://github.com/octalide/mach-tree-sitter)
+- **Syntax highlighting** via [mach-tree-sitter](https://github.com/briar-systems/mach-tree-sitter)
 - **Auto-indentation** for blocks, records, unions, parameter lists, and initializer lists
 - **Bracket matching** and auto-closing for `{}`, `[]`, `()`, `""`, `''`
 - **Comment toggling** with `#`
@@ -135,7 +135,7 @@ If none of these succeed, Zed shows an error message guiding the user to install
 
 ## Contributing
 
-1. Clone this repo alongside [mach-tree-sitter](https://github.com/octalide/mach-tree-sitter).
+1. Clone this repo alongside [mach-tree-sitter](https://github.com/briar-systems/mach-tree-sitter).
 2. Edit queries in `languages/mach/` and reload the Zed extension to test.
 3. For grammar changes, update `mach-tree-sitter` and bump the `rev` in `[grammars.mach]` of `extension.toml`.
 4. For LSP integration changes, edit `src/lib.rs` and rebuild the WASM component.
