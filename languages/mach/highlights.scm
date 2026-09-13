@@ -13,6 +13,7 @@
 "def" @keyword
 "rec" @keyword
 "uni" @keyword
+"tag" @keyword
 
 ; keywords — storage
 "val" @keyword
@@ -51,6 +52,16 @@
 
 (union_declaration
   name: (identifier) @type)
+
+(tag_declaration
+  name: (identifier) @type)
+
+; tag cases — declaration, construction ( Type.case{...} )
+(tag_case
+  name: (identifier) @constant)
+
+(tag_literal
+  case: (identifier) @constant)
 
 (type_alias_declaration
   name: (identifier) @type)
@@ -170,6 +181,11 @@
 (comptime_field_path
   (identifier) @variable.special)
 
+; comptime type constructors ( $pointee_of(T), $discriminant_of(T) )
+(comptime_type
+  "$" @keyword
+  name: (identifier) @function.builtin)
+
 ; asm — asm <isa> { raw body }
 (asm_statement
   isa: (identifier) @label)
@@ -188,7 +204,11 @@
 (cast_expression
   operator: _ @operator)
 
-; secret qualifier ( ^T ) and explicit secret stripping ( value:^T )
+; case test ( sel place.case )
+(sel_expression
+  "sel" @keyword)
+
+; secret qualifier ( ^T ) and declassification ( value:>T )
 (secret_type
   marker: "^" @type.qualifier)
 

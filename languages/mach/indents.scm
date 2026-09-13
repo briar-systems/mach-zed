@@ -9,6 +9,7 @@
 (block "}" @end) @indent
 (declaration_block "}" @end) @indent
 (field_declaration_list "}" @end) @indent
+(tag_case_list "}" @end) @indent
 (initializer_list "}" @end) @indent
 (parameter_list ")" @end) @indent
 (argument_list ")" @end) @indent
