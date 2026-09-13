@@ -10,6 +10,13 @@
 (union_declaration
   name: (identifier) @name) @item
 
+; tags and their cases
+(tag_declaration
+  name: (identifier) @name) @item
+
+(tag_case
+  name: (identifier) @name) @item
+
 ; type aliases
 (type_alias_declaration
   name: (identifier) @name) @item
