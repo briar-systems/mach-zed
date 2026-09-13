@@ -8,7 +8,7 @@ repository = "https://github.com/briar-systems/mach-zed"
 
 [grammars.mach]
 repository = "https://github.com/briar-systems/mach-tree-sitter"
-rev = "f1972d35786055e48d512c7d66bed69d2de93ad6"
+rev = "d57778e9281a43cd526baf62072149daa522b53b"
 
 [language_servers.mls]
 name = "Mach Language Server"
