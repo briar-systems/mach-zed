@@ -107,6 +107,7 @@ If `mls` is not on your `$PATH`, or you want to use a specific build, configure 
 
 ```
 mach-zed/
+├── .github/workflows/ci.yml    # CI (fmt, clippy, wasm build, query checks)
 ├── extension.toml              # Extension manifest (grammars, LSP, metadata)
 ├── Cargo.toml                  # Rust WASM extension build configuration
 ├── src/
@@ -118,6 +119,7 @@ mach-zed/
 │       ├── highlights.scm      # Syntax highlighting queries
 │       ├── indents.scm         # Auto-indentation queries
 │       └── outline.scm         # Document outline queries
+├── CHANGELOG.md
 └── README.md
 ```
 
