@@ -1,5 +1,5 @@
 ; comments
-(comment) @comment
+(no_such_node) @comment
 
 ; keywords — import / re-export
 "use" @keyword
