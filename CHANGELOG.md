@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Mach 5.2 syntax highlights correctly (#44). A bodyless `def Name;` handle or
+  abi type highlights its name as a type and appears in the outline, and the
+  operands of `$is_integer` and `$is_float` highlight as types.
 - A changelog, backfilled from the history of every release tag (#40).
 
 ### Changed
+- The grammar is pinned to mach-tree-sitter v0.6.0 (#44).
 - CI follows the family contract in briar-systems/.github (briar-systems/mach#3447).
   One `ci.yml` checks formatting, runs clippy, builds the extension for
   `wasm32-wasip2` (the target Zed builds extensions for) and compiles every
