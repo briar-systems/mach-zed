@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-16
+
 ### Added
 - Mach 5.2 syntax highlights correctly (#44). A bodyless `def Name;` handle or
   abi type highlights its name as a type and appears in the outline, and the
@@ -115,7 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - The bare `*` and `&` sigils highlight, so pointer types render.
 
-[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.6.0...dev
+[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.7.0...dev
+[0.7.0]: https://github.com/briar-systems/mach-zed/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/briar-systems/mach-zed/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/briar-systems/mach-zed/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/briar-systems/mach-zed/compare/v0.4.1...v0.4.2
