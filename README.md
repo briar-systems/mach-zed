@@ -58,15 +58,15 @@ If you're developing the extension locally and need to rebuild the WASM componen
 
 ```bash
 cd mach-zed
-cargo build --release --target wasm32-wasip1
+cargo build --release --target wasm32-wasip2
 ```
 
-> **Note:** You need the `wasm32-wasip1` target installed:
+> **Note:** You need the `wasm32-wasip2` target installed:
 > ```bash
-> rustup target add wasm32-wasip1
+> rustup target add wasm32-wasip2
 > ```
 
-The compiled `.wasm` file will be at `target/wasm32-wasip1/release/mach_zed.wasm`. Zed handles building and loading the WASM automatically when installing from the extension registry or from a local dev extension directory.
+The compiled `.wasm` file will be at `target/wasm32-wasip2/release/mach_zed.wasm`. Zed handles building and loading the WASM automatically when installing from the extension registry or from a local dev extension directory.
 
 ## Configuration
 
@@ -107,6 +107,7 @@ If `mls` is not on your `$PATH`, or you want to use a specific build, configure 
 
 ```
 mach-zed/
+├── .github/workflows/ci.yml    # CI (fmt, clippy, wasm build, query checks)
 ├── extension.toml              # Extension manifest (grammars, LSP, metadata)
 ├── Cargo.toml                  # Rust WASM extension build configuration
 ├── src/
@@ -118,6 +119,7 @@ mach-zed/
 │       ├── highlights.scm      # Syntax highlighting queries
 │       ├── indents.scm         # Auto-indentation queries
 │       └── outline.scm         # Document outline queries
+├── CHANGELOG.md
 └── README.md
 ```
 

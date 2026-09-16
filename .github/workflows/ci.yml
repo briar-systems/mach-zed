@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: |
+          rustup toolchain install stable --profile minimal --component rustfmt,clippy --target wasm32-wasip2
+          rustup default stable
+      - run: cargo fmt --check
+      - run: cargo clippy --target wasm32-wasip2 -- -D warnings
+      - run: cargo build --release --target wasm32-wasip2
+
+  queries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: pinned grammar
+        id: grammar
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import tomllib
+          g = tomllib.load(open("extension.toml", "rb"))["grammars"]["mach"]
+          print(f"repository={g['repository'].removeprefix('https://github.com/')}")
+          print(f"rev={g['rev']}")
+          PY
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ steps.grammar.outputs.repository }}
+          ref: ${{ steps.grammar.outputs.rev }}
+          path: .grammar
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: .grammar
+      - name: queries compile against the grammar
+        run: |
+          for q in languages/mach/*.scm; do
+            echo "$q"
+            .grammar/node_modules/.bin/tree-sitter query --quiet --grammar-path .grammar "$q" .grammar/test/highlight/*.mach
+          done
+
+  gate:
+    if: always()
+    needs: [extension, queries]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: briar-systems/.github/.github/actions/gate@main
+        with:
+          needs: ${{ toJSON(needs) }}

@@ -1,0 +1,128 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.7.0] - 2026-09-16
+
+### Added
+- Mach 5.2 syntax highlights correctly (#44). A bodyless `def Name;` handle or
+  abi type highlights its name as a type and appears in the outline, and the
+  operands of `$is_integer` and `$is_float` highlight as types.
+- A changelog, backfilled from the history of every release tag (#40).
+
+### Changed
+- The grammar is pinned to mach-tree-sitter v0.6.0 (#44).
+- CI follows the family contract in briar-systems/.github (briar-systems/mach#3447).
+  One `ci.yml` checks formatting, runs clippy, builds the extension for
+  `wasm32-wasip2` (the target Zed builds extensions for) and compiles every
+  query file against the pinned grammar. It ends in a `gate` job and runs on
+  pull requests and dispatch only (#35).
+- The README builds the extension for `wasm32-wasip2` instead of
+  `wasm32-wasip1` (#35).
+
+## [0.6.0] - 2026-09-13
+
+### Added
+- Mach 5.0 syntax support (#32). `tag` and `sel` highlight as keywords, tag
+  cases highlight as constants in declarations and generic literals, and tag
+  declarations appear in the outline with their cases.
+
+### Changed
+- `:>` highlights as the declassification operator, replacing the removed
+  `:^` form (#32).
+- The grammar is pinned to mach-tree-sitter v0.5.0 (#32).
+
+## [0.5.0] - 2026-08-31
+
+### Added
+- Secret syntax highlighting (#29). The `^` marker in a `^T` secret type
+  highlights as a type qualifier, and the operator in a `value:^T` strip
+  highlights as an operator.
+
+### Changed
+- The grammar is pinned to mach-tree-sitter v0.4.0 (#29).
+- Repository references point at the briar-systems organization after the
+  transfer (#25, #27).
+
+### Fixed
+- Both `#[` and `]` of an annotation highlight as `punctuation.special`. The
+  closing delimiter was overwritten by the broad bracket captures (#29).
+
+## [0.4.2] - 2026-06-24
+
+### Fixed
+- Method and qualified call targets highlight as functions instead of
+  properties. The call rules now follow the field rules, so they win under
+  last-match-wins (#22).
+
+## [0.4.1] - 2026-06-24
+
+### Added
+- Projection expressions (`v.[f]`) highlight their punctuation.
+- `#[` ... `]` is a bracket-matching pair.
+
+### Changed
+- The decorator `#[` sigil highlights as `punctuation.special`, and the
+  decorator name stays an attribute.
+
+### Fixed
+- Auto-indent no longer dedents on the closers of constructs that do not
+  indent, such as `if` / `for` / `$if` conditions, generics, type arguments and
+  indexing. Indent ends are scoped to their containers and the blanket outdent
+  rule is gone.
+
+## [0.4.0] - 2026-06-20
+
+### Changed
+- Decorators use the `#[attr]` form. The grammar is pinned to
+  mach-tree-sitter v0.3.0 and the decorator query follows it.
+
+## [0.3.0] - 2026-06-19
+
+### Added
+- Mach 2.0.0 query support (#16, #19). Decorators highlight as attributes
+  while their arguments keep their own highlights. Comptime variadic packs
+  highlight: `va: ...` pack parameters, the `$each a in va { ... }` unroll and
+  the `va...` spread.
+
+### Changed
+- The grammar is pinned to mach-tree-sitter v0.2.0.
+- `zed_extension_api` is 0.7.0.
+- The README documents the `mach-lsp` to `mls` rename and builds mach-lsp with
+  `mach dep pull` and `mach build`.
+
+### Removed
+- The C-style `varargs_expression` highlight, which Mach 2.0.0 dropped.
+
+### Fixed
+- The README license link points at `./LICENSE` (#11).
+
+## [0.2.0] - 2026-06-08
+
+### Added
+- Initial Zed extension for Mach: syntax highlighting, auto-indentation,
+  bracket matching, comment toggling and the document outline, backed by
+  mach-tree-sitter.
+- A Rust WASM component that starts `mls`. It resolves the binary from the
+  `lsp.mls.binary.path` setting, then a cached path, then `$PATH`.
+- An MIT license.
+- Queries for the `:~` and `::` casts, `fwd` re-exports, `$` comptime
+  parameters and fields, and the `asm <isa> { ... }` form.
+
+### Fixed
+- The bare `*` and `&` sigils highlight, so pointer types render.
+
+[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.7.0...dev
+[0.7.0]: https://github.com/briar-systems/mach-zed/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/briar-systems/mach-zed/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/briar-systems/mach-zed/compare/v0.4.2...v0.5.0
+[0.4.2]: https://github.com/briar-systems/mach-zed/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/briar-systems/mach-zed/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/briar-systems/mach-zed/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/briar-systems/mach-zed/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/briar-systems/mach-zed/releases/tag/v0.2.0

@@ -17,19 +17,7 @@ impl zed::Extension for MachExtension {
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> Result<Command> {
-        // 1. Check user-configured binary path via Zed LSP settings.
-        //
-        //    Users can set this in their settings.json:
-        //    {
-        //        "lsp": {
-        //            "mls": {
-        //                "binary": {
-        //                    "path": "/path/to/mls",
-        //                    "arguments": []
-        //                }
-        //            }
-        //        }
-        //    }
+        // user-configured path from lsp.mls.binary in settings.json
         let lsp_settings = LspSettings::for_worktree(language_server_id.as_ref(), worktree)
             .ok()
             .unwrap_or_default();
@@ -45,7 +33,7 @@ impl zed::Extension for MachExtension {
             }
         }
 
-        // 2. Check if we previously found the binary and it still exists.
+        // previously resolved path, if it still exists
         if let Some(path) = &self.cached_binary_path {
             if fs::metadata(path).is_ok() {
                 return Ok(Command {
@@ -57,7 +45,6 @@ impl zed::Extension for MachExtension {
             self.cached_binary_path = None;
         }
 
-        // 3. Look for `mls` on the system PATH.
         if let Some(path) = worktree.which("mls") {
             self.cached_binary_path = Some(path.clone());
             return Ok(Command {
