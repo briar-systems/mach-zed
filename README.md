@@ -29,15 +29,17 @@ Restart Zed to pick up the extension.
 
 ## Language Server
 
-This extension ships a Rust WASM extension that tells Zed how to locate and start `mls`. When you open a `.mach` file, Zed will:
+The extension starts `mls`, the [mach-lsp](https://github.com/briar-systems/mach-lsp) server. When you open a `.mach` file, Zed resolves it in this order:
 
-1. Check your Zed settings for a user-configured binary path (see [Configuration](#configuration) below).
-2. Look for `mls` on your system `$PATH`.
-3. If neither is found, display an error with instructions.
+1. The binary path in your Zed settings (see [Configuration](#configuration) below).
+2. `mls` on your `$PATH`.
+3. A prebuilt `mls` downloaded from the latest mach-lsp release.
+
+The download needs no setup. The extension fetches the archive for your platform, checks it against the release's `SHA256SUMS`, and keeps it in the extension's work directory as `mls-<version>/`. A newer mach-lsp release is picked up the next time Zed loads the extension, and older copies are removed. When GitHub cannot be reached, the newest copy already downloaded is used. Prebuilt binaries exist for x86_64 and aarch64 Linux, x86_64 and aarch64 macOS, and x86_64 Windows. On any other platform, put `mls` on your `$PATH` or set its path in settings.
 
 ### Building mach-lsp
 
-Build `mach-lsp` from source:
+To use your own build instead, build `mach-lsp` from source:
 
 ```bash
 git clone https://github.com/briar-systems/mach-lsp.git
@@ -46,10 +48,10 @@ mach dep pull
 mach build .
 ```
 
-The binary will be at `out/{target}/{profile}/bin/mls` (e.g. `out/linux/debug/bin/mls` for a default debug build on Linux). Add it to your `$PATH`:
+The binary will be at `out/{target}/{profile}/bin/mls` (e.g. `out/linux-x86_64/debug/bin/mls` for a default debug build on Linux). Put it on your `$PATH` or point the settings at it:
 
 ```bash
-cp out/linux/debug/bin/mls ~/.local/bin/
+install -Dm755 out/linux-x86_64/debug/bin/mls ~/.local/bin/mls
 ```
 
 ### Building the WASM Extension
@@ -88,7 +90,7 @@ You can customize Mach-specific editor settings in your Zed `settings.json`:
 
 ### Language Server Binary
 
-If `mls` is not on your `$PATH`, or you want to use a specific build, configure the binary path in your Zed `settings.json`:
+To use a specific build of `mls`, set its path in your Zed `settings.json`. `arguments` are passed to `mls` whichever way it was found:
 
 ```json
 {
@@ -111,7 +113,8 @@ mach-zed/
 ├── extension.toml              # Extension manifest (grammars, LSP, metadata)
 ├── Cargo.toml                  # Rust WASM extension build configuration
 ├── src/
-│   └── lib.rs                  # WASM extension entry point (language_server_command)
+│   ├── lib.rs                  # WASM extension entry point (language_server_command)
+│   └── install.rs              # mls release asset selection, verification, extraction
 ├── languages/
 │   └── mach/
 │       ├── config.toml         # Language configuration (brackets, comments, etc.)
@@ -129,11 +132,11 @@ Zed extensions with language server support require a Rust WASM component that i
 
 The extension resolves the `mls` binary in this order:
 
-1. **User settings** — `lsp.mls.binary.path` in Zed's `settings.json`
-2. **Cached path** — a previously resolved path that still exists on disk
-3. **System PATH** — `worktree.which("mls")` searches `$PATH`
+1. **User settings**: `lsp.mls.binary.path` in Zed's `settings.json`
+2. **System PATH**: `worktree.which("mls")` searches `$PATH`
+3. **Release download**: the asset for the current platform from the latest [mach-lsp release](https://github.com/briar-systems/mach-lsp/releases), named by mach-lsp's release asset contract. It is verified against `SHA256SUMS`, extracted in the extension, and installed atomically into `mls-<version>/` (`src/install.rs`)
 
-If none of these succeed, Zed shows an error message guiding the user to install `mls`.
+If none of these succeed, Zed shows the reason in the language server status.
 
 ## Contributing
 
