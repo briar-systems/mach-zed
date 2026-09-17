@@ -2,7 +2,7 @@ id = "mach"
 name = "Mach"
 version = "0.8.0"
 schema_version = 1
-authors = ["octalide"]
+authors = ["Briar Systems LLC"]
 description = "Mach language support for Zed — syntax highlighting, indentation, and LSP integration."
 repository = "https://github.com/briar-systems/mach-zed"
 

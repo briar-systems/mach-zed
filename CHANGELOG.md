@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- The extension is attributed to Briar Systems LLC in `LICENSE` and in the
+  `extension.toml` authors (#49).
+
 ## [0.8.0] - 2026-09-17
 
 ### Added
