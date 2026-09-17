@@ -8,11 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- The extension installs the newest mach-lsp release whose compiler the
+  project accepts, rather than always the latest (#53). It reads the
+  `[project].mach` ranges of the root `mach.toml` and of the dependency
+  closure, and chooses through the `RELEASES.json` map every mach-lsp release
+  publishes. When no release satisfies the ranges, it installs the newest and
+  mls reports why on `mach.toml`. A latest release without a valid map is
+  reported as an error.
 - The README documents mls's options under `lsp.mls.initialization_options`
   and how the compiler mls links decides which projects it loads, with the
   diagnostics it reports on `mach.toml` (#51).
 
 ### Changed
+- Downloaded mls versions are kept until no project has used them for 30
+  days, so projects that need different versions do not replace each other's
+  copy. Offline, the extension chooses among the downloaded versions with the
+  last map it fetched (#53).
 - The README no longer suggests passing arguments to `mls`, which takes none
   (#51).
 - The extension is attributed to Briar Systems LLC in `LICENSE` and in the
