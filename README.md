@@ -90,20 +90,63 @@ You can customize Mach-specific editor settings in your Zed `settings.json`:
 
 ### Language Server Binary
 
-To use a specific build of `mls`, set its path in your Zed `settings.json`. `arguments` are passed to `mls` whichever way it was found:
+To use a specific build of `mls`, set its path in your Zed `settings.json`:
 
 ```json
 {
     "lsp": {
         "mls": {
             "binary": {
-                "path": "/absolute/path/to/mls",
-                "arguments": []
+                "path": "/absolute/path/to/mls"
             }
         }
     }
 }
 ```
+
+`mls` takes no arguments, so leave `binary.arguments` unset.
+
+### Language Server Options
+
+`mls` reads its options once, when it starts. Set them under `lsp.mls.initialization_options`. Zed passes them to the server unchanged and restarts it when they change:
+
+```json
+{
+    "lsp": {
+        "mls": {
+            "initialization_options": {
+                "trace": "messages",
+                "traceFile": "/home/me/mls.log"
+            }
+        }
+    }
+}
+```
+
+| key | value | environment fallback |
+| --- | --- | --- |
+| `trace` | `"off"`, `"messages"` (what each message is, no contents) or `"bodies"` (also message contents, which include your source code) | `MLS_TRACE` |
+| `traceFile` | an absolute path the trace is appended to. Without it or `MLS_TRACE_FILE`, the trace goes to `/tmp/mach-lsp.log` | `MLS_TRACE_FILE` |
+| `requestDeadlineMs` | how long a request may wait on analysis before the server gives up on it, at least `1000` | `MLS_REQUEST_DEADLINE_MS` |
+
+An option takes precedence over its environment variable, which takes precedence over the server's default. Nothing is traced unless `trace` or `MLS_TRACE` turns it on. An unknown key or an unusable value is ignored, noted in the trace, and never stops the server from starting.
+
+Leave `requestDeadlineMs` unset unless you have a reason to change it. In mach-lsp 0.20.0, a deadline shorter than the time your project takes to load stops the language server altogether.
+
+The server does not read `lsp.mls.settings`, so options placed there have no effect.
+
+### Compiler Compatibility
+
+`mls` contains the Mach compiler, linked from one mach release. `mls --version` names it, for example `mls 0.20.0 (mach 5.4.0)`. The extension installs the latest mach-lsp release, so it links the newest compiler mach-lsp ships.
+
+A project states the compilers it builds with as `[project].mach` in its `mach.toml`:
+
+```toml
+[project]
+mach = "^5.4"
+```
+
+When the linked compiler is outside that range, or outside a range one of the project's dependencies states, `mls` does not load the project. It reports why as an error on `mach.toml`, naming the dependency chain, and shows it as a notification. A `mach.toml` without the key loads, with a warning that gives the line to add. Both are reported on `mach.toml` itself, so they appear in the project diagnostics panel and when you open that file, and they clear once you save the fix. If your project needs a different compiler than the extension's `mls` links, put a matching `mls` on your `$PATH` or set `lsp.mls.binary.path`.
 
 ## Project Structure
 
