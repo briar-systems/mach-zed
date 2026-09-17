@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- The README documents mls's options under `lsp.mls.initialization_options`
+  and how the compiler mls links decides which projects it loads, with the
+  diagnostics it reports on `mach.toml` (#51).
+
 ### Changed
+- The README no longer suggests passing arguments to `mls`, which takes none
+  (#51).
 - The extension is attributed to Briar Systems LLC in `LICENSE` and in the
   `extension.toml` authors (#49).
 
