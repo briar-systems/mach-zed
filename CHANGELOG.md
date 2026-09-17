@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-17
+
+### Added
+- The extension downloads a prebuilt `mls` from the latest mach-lsp release
+  when neither the settings nor `$PATH` provide one (#39). The archive for the
+  current platform is checked against the release's `SHA256SUMS` before it is
+  unpacked, each version is kept in its own `mls-<version>/` directory, and
+  older copies are removed after an upgrade. Without network access the newest
+  downloaded copy is used. Platforms mach-lsp does not ship fail with a message
+  that says how to provide `mls` instead.
+
+### Changed
+- `mls` on `$PATH` now takes precedence over a previously found binary, so
+  replacing the one on `$PATH` takes effect on the next server start (#39).
+- `lsp.mls.binary.arguments` applies without a `path`, to whichever `mls` is
+  found (#39).
+- CI runs clippy on the tests and runs `cargo test` (#39).
+
 ## [0.7.0] - 2026-09-16
 
 ### Added
@@ -117,7 +135,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - The bare `*` and `&` sigils highlight, so pointer types render.
 
-[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.7.0...dev
+[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.8.0...dev
+[0.8.0]: https://github.com/briar-systems/mach-zed/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/briar-systems/mach-zed/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/briar-systems/mach-zed/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/briar-systems/mach-zed/compare/v0.4.2...v0.5.0
