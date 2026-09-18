@@ -5,7 +5,7 @@ use zed_extension_api::{Architecture, Os};
 
 pub const REPO: &str = "briar-systems/mach-lsp";
 pub const SUMS: &str = "SHA256SUMS";
-const DIR_PREFIX: &str = "mls-";
+pub const DIR_PREFIX: &str = "mls-";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Archive {
@@ -75,6 +75,20 @@ pub fn staging_dir(version: &str) -> String {
 
 pub fn is_install_dir(name: &str) -> bool {
     name.starts_with(DIR_PREFIX)
+}
+
+// written into an install dir each time it is handed out, so its mtime says when it was last used
+pub const LAST_USED: &str = ".last-used";
+
+// installs unused for this long are removed
+pub const RETENTION: std::time::Duration = std::time::Duration::from_secs(30 * 24 * 60 * 60);
+
+// whether a work dir entry should be removed, given its age since last use when known
+pub fn prunable(name: &str, in_use: bool, idle: Option<std::time::Duration>) -> bool {
+    if !is_install_dir(name) || in_use {
+        return false;
+    }
+    name.ends_with(".partial") || idle.is_some_and(|idle| idle > RETENTION)
 }
 
 // the newest complete install among work dir entry names
@@ -210,6 +224,18 @@ mod tests {
         assert_eq!(target(Os::Linux, Architecture::X86), None);
         assert_eq!(target(Os::Windows, Architecture::Aarch64), None);
         assert_eq!(target(Os::Windows, Architecture::X86), None);
+    }
+
+    #[test]
+    fn prunes_abandoned_staging_and_long_idle_installs_only() {
+        let day = std::time::Duration::from_secs(24 * 60 * 60);
+        assert!(prunable("mls-0.20.0.partial", false, Some(day)));
+        assert!(prunable("mls-0.19.0", false, Some(RETENTION + day)));
+        assert!(!prunable("mls-0.19.0", false, Some(day)));
+        assert!(!prunable("mls-0.19.0", false, None));
+        assert!(!prunable("mls-0.19.0", true, Some(RETENTION + day)));
+        assert!(!prunable("releases.json", false, Some(RETENTION + day)));
+        assert!(!prunable("grammars", false, Some(RETENTION + day)));
     }
 
     #[test]

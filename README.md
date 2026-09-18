@@ -35,7 +35,7 @@ The extension starts `mls`, the [mach-lsp](https://github.com/briar-systems/mach
 2. `mls` on your `$PATH`.
 3. A prebuilt `mls` downloaded from the latest mach-lsp release.
 
-The download needs no setup. The extension fetches the archive for your platform, checks it against the release's `SHA256SUMS`, and keeps it in the extension's work directory as `mls-<version>/`. A newer mach-lsp release is picked up the next time Zed loads the extension, and older copies are removed. When GitHub cannot be reached, the newest copy already downloaded is used. Prebuilt binaries exist for x86_64 and aarch64 Linux, x86_64 and aarch64 macOS, and x86_64 Windows. On any other platform, put `mls` on your `$PATH` or set its path in settings.
+The download needs no setup. The extension picks the newest mach-lsp release whose compiler your project accepts (see [Compiler Compatibility](#compiler-compatibility)). It fetches that release's archive for your platform, checks it against the release's `SHA256SUMS`, and keeps it in the extension's work directory as `mls-<version>/`. A newer mach-lsp release is picked up the next time Zed loads the extension. A copy no project has used for 30 days is removed. When GitHub cannot be reached, the extension chooses among the copies already downloaded. Prebuilt binaries exist for x86_64 and aarch64 Linux, x86_64 and aarch64 macOS, and x86_64 Windows. On any other platform, put `mls` on your `$PATH` or set its path in settings.
 
 ### Building mach-lsp
 
@@ -90,20 +90,65 @@ You can customize Mach-specific editor settings in your Zed `settings.json`:
 
 ### Language Server Binary
 
-To use a specific build of `mls`, set its path in your Zed `settings.json`. `arguments` are passed to `mls` whichever way it was found:
+To use a specific build of `mls`, set its path in your Zed `settings.json`:
 
 ```json
 {
     "lsp": {
         "mls": {
             "binary": {
-                "path": "/absolute/path/to/mls",
-                "arguments": []
+                "path": "/absolute/path/to/mls"
             }
         }
     }
 }
 ```
+
+`mls` takes no arguments, so leave `binary.arguments` unset.
+
+### Language Server Options
+
+`mls` reads its options once, when it starts. Set them under `lsp.mls.initialization_options`. Zed passes them to the server unchanged and restarts it when they change:
+
+```json
+{
+    "lsp": {
+        "mls": {
+            "initialization_options": {
+                "trace": "messages",
+                "traceFile": "/home/me/mls.log"
+            }
+        }
+    }
+}
+```
+
+| key | value | environment fallback |
+| --- | --- | --- |
+| `trace` | `"off"`, `"messages"` (what each message is, no contents) or `"bodies"` (also message contents, which include your source code) | `MLS_TRACE` |
+| `traceFile` | an absolute path the trace is appended to. Without it or `MLS_TRACE_FILE`, the trace goes to `/tmp/mach-lsp.log` | `MLS_TRACE_FILE` |
+| `requestDeadlineMs` | how long a request may wait on analysis before the server gives up on it, at least `1000` | `MLS_REQUEST_DEADLINE_MS` |
+
+An option takes precedence over its environment variable, which takes precedence over the server's default. Nothing is traced unless `trace` or `MLS_TRACE` turns it on. An unknown key or an unusable value is ignored, noted in the trace, and never stops the server from starting.
+
+Leave `requestDeadlineMs` unset unless you have a reason to change it. In mach-lsp 0.20.0, a deadline shorter than the time your project takes to load stops the language server altogether.
+
+The server does not read `lsp.mls.settings`, so options placed there have no effect.
+
+### Compiler Compatibility
+
+`mls` contains the Mach compiler, linked from one mach release. `mls --version` names it, for example `mls 0.20.0 (mach 5.4.0)`.
+
+A project states the compilers it builds with as `[project].mach` in its `mach.toml`:
+
+```toml
+[project]
+mach = "^5.4"
+```
+
+When the linked compiler is outside that range, or outside a range one of the project's dependencies states, `mls` does not load the project. It reports why as an error on `mach.toml`, naming the dependency chain, and shows it as a notification. A `mach.toml` without the key loads, with a warning that gives the line to add. Both are reported on `mach.toml` itself, so they appear in the project diagnostics panel and when you open that file, and they clear once you save the fix.
+
+The extension reads these ranges before it installs `mls`. It collects `[project].mach` from the `mach.toml` at the root of your Zed project and from every dependency it can reach (`dep/<id>/mach.toml` for a git dependency, the declared directory for a path dependency). Then it installs the newest mach-lsp release whose compiler satisfies all of them. Each release publishes `RELEASES.json`, which maps every mach-lsp version to the compiler it links, so no other release needs downloading to decide. When no release satisfies the ranges, or a range does not parse, the extension installs the newest release, and `mls` reports the problem on `mach.toml`. The choice is made once per project when its language server starts, so restart the server (`editor: restart language server`) after changing a range. An `mls` from your settings or `$PATH` is used as it is, whatever it links.
 
 ## Project Structure
 
@@ -114,7 +159,9 @@ mach-zed/
 ├── Cargo.toml                  # Rust WASM extension build configuration
 ├── src/
 │   ├── lib.rs                  # WASM extension entry point (language_server_command)
-│   └── install.rs              # mls release asset selection, verification, extraction
+│   ├── compat.rs               # dependency closure ranges and mls release selection
+│   ├── install.rs              # mls release asset naming, verification, extraction
+│   └── semver.rs               # mach version and range grammar
 ├── languages/
 │   └── mach/
 │       ├── config.toml         # Language configuration (brackets, comments, etc.)
@@ -134,7 +181,7 @@ The extension resolves the `mls` binary in this order:
 
 1. **User settings**: `lsp.mls.binary.path` in Zed's `settings.json`
 2. **System PATH**: `worktree.which("mls")` searches `$PATH`
-3. **Release download**: the asset for the current platform from the latest [mach-lsp release](https://github.com/briar-systems/mach-lsp/releases), named by mach-lsp's release asset contract. It is verified against `SHA256SUMS`, extracted in the extension, and installed atomically into `mls-<version>/` (`src/install.rs`)
+3. **Release download**: the newest [mach-lsp release](https://github.com/briar-systems/mach-lsp/releases) whose compiler satisfies the project's dependency closure, found through the latest release's `RELEASES.json` (`src/compat.rs`, with ranges parsed by `src/semver.rs` to the grammar in mach's `doc/language/manifest.md`). Its asset for the current platform, named by mach-lsp's release asset contract, is verified against `SHA256SUMS`, extracted in the extension, and installed atomically into `mls-<version>/` (`src/install.rs`). A latest release without a valid `RELEASES.json` that lists itself is reported as an error, not worked around
 
 If none of these succeed, Zed shows the reason in the language server status.
 
