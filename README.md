@@ -35,7 +35,7 @@ The extension starts `mls`, the [mach-lsp](https://github.com/briar-systems/mach
 2. `mls` on your `$PATH`.
 3. A prebuilt `mls` downloaded from the latest mach-lsp release.
 
-The download needs no setup. The extension picks the newest mach-lsp release whose compiler your project accepts (see [Compiler Compatibility](#compiler-compatibility)). It fetches that release's archive for your platform, checks it against the release's `SHA256SUMS`, and keeps it in the extension's work directory as `mls-<version>/`. A newer mach-lsp release is picked up the next time Zed loads the extension. A copy no project has used for 30 days is removed. When GitHub cannot be reached, the extension chooses among the copies already downloaded. Prebuilt binaries exist for x86_64 and aarch64 Linux, x86_64 and aarch64 macOS, and x86_64 Windows. On any other platform, put `mls` on your `$PATH` or set its path in settings.
+The download needs no setup. The extension picks the newest mach-lsp release whose compiler your project accepts (see [Compiler Compatibility](#compiler-compatibility)). It fetches that release's archive for your platform and keeps it in the extension's work directory as `mls-<version>/`. A newer mach-lsp release is picked up the next time Zed loads the extension. A copy no project has used for 30 days is removed. When GitHub cannot be reached, the extension chooses among the copies already downloaded. Prebuilt binaries exist for x86_64 and aarch64 Linux, x86_64 and aarch64 macOS, and x86_64 Windows. On any other platform, put `mls` on your `$PATH` or set its path in settings.
 
 ### Building mach-lsp
 
@@ -160,7 +160,7 @@ mach-zed/
 ├── src/
 │   ├── lib.rs                  # WASM extension entry point (language_server_command)
 │   ├── compat.rs               # dependency closure ranges and mls release selection
-│   ├── install.rs              # mls release asset naming, verification, extraction
+│   ├── install.rs              # mls release asset naming and install layout
 │   └── semver.rs               # mach version and range grammar
 ├── languages/
 │   └── mach/
@@ -181,7 +181,7 @@ The extension resolves the `mls` binary in this order:
 
 1. **User settings**: `lsp.mls.binary.path` in Zed's `settings.json`
 2. **System PATH**: `worktree.which("mls")` searches `$PATH`
-3. **Release download**: the newest [mach-lsp release](https://github.com/briar-systems/mach-lsp/releases) whose compiler satisfies the project's dependency closure, found through the latest release's `RELEASES.json` (`src/compat.rs`, with ranges parsed by `src/semver.rs` to the grammar in mach's `doc/language/manifest.md`). Its asset for the current platform, named by mach-lsp's release asset contract, is verified against `SHA256SUMS`, extracted in the extension, and installed atomically into `mls-<version>/` (`src/install.rs`). A latest release without a valid `RELEASES.json` that lists itself is reported as an error, not worked around
+3. **Release download**: the newest [mach-lsp release](https://github.com/briar-systems/mach-lsp/releases) whose compiler satisfies the project's dependency closure, found through the latest release's `RELEASES.json` (`src/compat.rs`, with ranges parsed by `src/semver.rs` to the grammar in mach's `doc/language/manifest.md`). Its asset for the current platform, named by mach-lsp's release asset contract, is extracted by Zed and installed atomically into `mls-<version>/` (`src/install.rs`). A latest release without a valid `RELEASES.json` that lists itself is reported as an error, not worked around
 
 If none of these succeed, Zed shows the reason in the language server status.
 

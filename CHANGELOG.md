@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-09-21
+
+### Changed
+- mls release archives are extracted by Zed rather than by the extension, and
+  are no longer checked against the release's `SHA256SUMS`, which is published
+  alongside the asset and so only guarded against a corrupted download. This
+  drops the `flate2`, `tar`, `zip`, and `sha2` dependencies (#57).
+
 ## [0.9.0] - 2026-09-18
 
 ### Added
@@ -159,7 +167,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - The bare `*` and `&` sigils highlight, so pointer types render.
 
-[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.9.0...dev
+[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.9.1...dev
+[0.9.1]: https://github.com/briar-systems/mach-zed/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/briar-systems/mach-zed/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/briar-systems/mach-zed/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/briar-systems/mach-zed/compare/v0.6.0...v0.7.0
