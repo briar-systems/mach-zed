@@ -167,7 +167,6 @@ fn install_release(
             .ok_or_else(|| format!("mach-lsp {} has no {name} asset", release.version))
     };
     let archive_url = url_of(&asset_name)?;
-    let sums_url = url_of(install::SUMS)?;
 
     zed::set_language_server_installation_status(
         id,
@@ -177,25 +176,12 @@ fn install_release(
     let _ = fs::remove_dir_all(&staging);
     fs::create_dir_all(&staging).map_err(|e| format!("could not create {staging}: {e}"))?;
 
-    let sums_path = format!("{staging}/{}", install::SUMS);
-    let archive_path = format!("{staging}/{asset_name}");
-    zed::download_file(&sums_url, &sums_path, DownloadedFileType::Uncompressed)?;
-    zed::download_file(
-        &archive_url,
-        &archive_path,
-        DownloadedFileType::Uncompressed,
-    )?;
-    let sums = fs::read_to_string(&sums_path).map_err(|e| format!("reading {sums_path}: {e}"))?;
-    let archive = fs::read(&archive_path).map_err(|e| format!("reading {archive_path}: {e}"))?;
+    zed::download_file(&archive_url, &staging, target.archive.file_type())?;
+    if !is_file(&format!("{staging}/{}", target.binary)) {
+        return Err(format!("{asset_name} has no {}", target.binary));
+    }
 
-    install::verify(&sums, &asset_name, &archive)?;
-    let bytes = install::extract_binary(target.archive, &archive, target.binary)?;
-    fs::write(format!("{staging}/{}", target.binary), bytes)
-        .map_err(|e| format!("writing {}: {e}", target.binary))?;
-    let _ = fs::remove_file(&sums_path);
-    let _ = fs::remove_file(&archive_path);
-
-    // the rename is the commit point, so a complete install dir always holds a verified binary
+    // the rename is the commit point, so a complete install dir always holds a whole binary
     let _ = fs::remove_dir_all(&dir);
     fs::rename(&staging, &dir).map_err(|e| format!("could not install {dir}: {e}"))?;
     zed::make_file_executable(&binary)?;

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- mls release archives are extracted by Zed rather than by the extension, and
+  are no longer checked against the release's `SHA256SUMS`, which is published
+  alongside the asset and so only guarded against a corrupted download. This
+  drops the `flate2`, `tar`, `zip`, and `sha2` dependencies (#57).
+
 ## [0.9.0] - 2026-09-18
 
 ### Added
