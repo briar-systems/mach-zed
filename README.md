@@ -14,18 +14,17 @@
 
 ### From the Zed Extension Registry
 
-Once published, search for **Mach** in Zed's extension panel (`zed: extensions`) and click **Install**.
+Search for **Mach** in Zed's extension panel (`zed: extensions`) and click **Install**.
 
-### Manual / Development
+### Development
 
-Clone this repository and symlink or copy it into your Zed extensions directory:
+Clone this repository:
 
 ```bash
 git clone https://github.com/briar-systems/mach-zed.git
-ln -s "$(pwd)/mach-zed" ~/.local/share/zed/extensions/installed/mach
 ```
 
-Restart Zed to pick up the extension.
+In Zed, run `zed: install dev extension` from the command palette and select the `mach-zed` directory. Zed builds the grammar and the WASM component and loads the extension. A dev extension replaces the registry copy while it is installed. Building it needs Rust installed through `rustup`.
 
 ## Language Server
 
@@ -68,7 +67,7 @@ cargo build --release --target wasm32-wasip2
 > rustup target add wasm32-wasip2
 > ```
 
-The compiled `.wasm` file will be at `target/wasm32-wasip2/release/mach_zed.wasm`. Zed handles building and loading the WASM automatically when installing from the extension registry or from a local dev extension directory.
+The compiled `.wasm` file will be at `target/wasm32-wasip2/release/mach_zed.wasm`. Zed handles building and loading the WASM automatically when installing from the extension registry or through `zed: install dev extension`.
 
 ## Configuration
 

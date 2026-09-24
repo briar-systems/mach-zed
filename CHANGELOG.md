@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- The README no longer says the extension is unpublished, and installs a local
+  checkout with `zed: install dev extension` instead of a symlink into Zed's
+  managed extensions directory (#61).
+
 ## [0.9.1] - 2026-09-21
 
 ### Changed
