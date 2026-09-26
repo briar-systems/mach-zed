@@ -143,7 +143,7 @@
 
 ; test declarations
 (test_declaration
-  name: (string_literal) @string.special)
+  name: (identifier) @function.definition)
 
 ; compile-time — declaration-scope $if / $or chain
 (comptime_if_declaration
