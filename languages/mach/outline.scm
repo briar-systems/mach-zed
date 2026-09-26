@@ -31,7 +31,7 @@
 
 ; test declarations
 (test_declaration
-  name: (string_literal) @name) @item
+  name: (identifier) @name) @item
 
 ; forward re-exports
 (forward_declaration
