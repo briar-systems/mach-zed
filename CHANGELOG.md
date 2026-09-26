@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-09-26
+
+### Added
+- mach 6 test declarations: the identifier in `test <identifier> { ... }`
+  highlights as `@function.definition` and names the test in the outline
+  (#65).
+
+### Changed
+- The grammar is pinned to mach-tree-sitter v0.7.0, which parses mach 6 test
+  declarations with an identifier name (#65).
+
 ## [0.9.2] - 2026-09-25
 
 ### Fixed
@@ -174,7 +185,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - The bare `*` and `&` sigils highlight, so pointer types render.
 
-[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.9.2...dev
+[Unreleased]: https://github.com/briar-systems/mach-zed/compare/v0.10.0...dev
+[0.10.0]: https://github.com/briar-systems/mach-zed/compare/v0.9.2...v0.10.0
 [0.9.2]: https://github.com/briar-systems/mach-zed/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/briar-systems/mach-zed/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/briar-systems/mach-zed/compare/v0.8.0...v0.9.0
